@@ -42,26 +42,30 @@ def display_messages():
         message_id = f"message_{idx}"
         if message["role"] == "user":
             message_html = f"""
-            <div id="{message_id}" style='background-color:#DCF8C6; padding:10px; border-radius:10px; margin:5px; text-align:right;'>
+            <div id="{message_id}" style='background-color:#495057; padding:10px 20px; border-radius:10px; margin:5px; text-align:right; width: 450px; float: right;'>
                 {message['content']}
             </div>
             """
             st.markdown(message_html, unsafe_allow_html=True)
         else:
             message_html = f"""
-            <div id="{message_id}" style='background-color:#E4E6EB; padding:10px; border-radius:10px; margin:5px; text-align:left;'>
+            <div id="{message_id}" style='background-color:#868e96; padding:10px 20px; border-radius:10px; margin:5px; text-align:left; width: 450px;'>
                 {message['content']}
             </div>
             """
             st.markdown(message_html, unsafe_allow_html=True)
-
+ 
 # 사이드바에 대화 기록 표시
 st.sidebar.title("📑 대화 기록")
+role = "😀"
 for idx, message in enumerate(st.session_state["messages"]):
-    role = "😀" if message["role"] == "user" else "🤖"
-    message_preview = message["content"][:20]  # 메시지의 처음 20자만 표시
-    message_id = f"message_{idx}"
-    st.sidebar.markdown(f"- [{role} {message_preview}](#{message_id})")
+    if message["role"] == "user":
+        message_preview = message["content"][:20]  # 메시지의 처음 20자만 표시
+        message_id = f"message_{idx}"
+        st.sidebar.markdown(f"- [{role} {message_preview}](#{message_id})")
+    
+    
+
 
 # 메인 레이아웃 구성
 st.title("🤖 ChatGPT 스타일 챗봇")
