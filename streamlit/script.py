@@ -3,8 +3,8 @@ import openai
 
 # 페이지 설정
 st.set_page_config(
-    page_title="ChatGPT 스타일 챗봇",
-    page_icon="🤖",
+    page_title="Enco Library Chatbot",
+    page_icon="📑",
     layout="wide",
 )
 
@@ -22,16 +22,16 @@ def send_message():
         st.session_state["messages"].append({"role": "user", "content": user_message})
 
         # OpenAI API 호출
-        with st.spinner("답변 생성 중..."):
+        with st.spinner("잠시만 기다려 주세용♥"):
             try:
                 response = openai.ChatCompletion.create(
-                    model="gpt-4o-mini",  # 또는 "gpt-4"
+                    model="gpt-4o-mini",
                     messages=st.session_state["messages"],
                 )
                 assistant_message = response.choices[0].message["content"].strip()
                 st.session_state["messages"].append({"role": "assistant", "content": assistant_message})
             except Exception as e:
-                st.error(f"오류가 발생했습니다: {e}")
+                st.error(f"오류 발생!!: {e}")
 
         # 입력 필드 초기화
         st.session_state["user_input"] = ""
@@ -57,7 +57,7 @@ def display_messages():
  
 # 사이드바에 대화 기록 표시
 st.sidebar.title("📑 대화 기록")
-role = "😀"
+role = "😍"
 for idx, message in enumerate(st.session_state["messages"]):
     if message["role"] == "user":
         message_preview = message["content"][:20]  # 메시지의 처음 20자만 표시
@@ -68,7 +68,7 @@ for idx, message in enumerate(st.session_state["messages"]):
 
 
 # 메인 레이아웃 구성
-st.title("🤖 ChatGPT 스타일 챗봇")
+st.title("Enco Library Chatbot 📖")
 
 # 메시지 표시
 display_messages()
