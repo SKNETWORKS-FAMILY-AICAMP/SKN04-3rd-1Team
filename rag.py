@@ -35,12 +35,12 @@ def reorder_documents(documents):
 
 load_dotenv()
 set_llm_cache(InMemoryCache())
-client = chromadb.HttpClient(host='localhost', port=8000)
+#현재 chromadb서버 주소와 포트
+client = chromadb.HttpClient(host='192.168.0.10', port=8000)
 # collection = client.get_collection('books')
 chroma_db = Chroma(collection_name='books', client=client, embedding_function=OpenAIEmbeddings(model='text-embedding-3-small', show_progress_bar=True))
 ret =  chroma_db.as_retriever(
-    # 검색할 결과의 개수를 2로 설정
-    search_kwargs={'k': 2},    
+    search_kwargs={'k': 5},    
 ).configurable_fields(
     # 검색 알고리즘을 선택할 수 있는 필드 설정
     search_type=ConfigurableField(
@@ -60,19 +60,17 @@ ret =  chroma_db.as_retriever(
 template = '''
 주어진 reference를 최대한 활용하라 
 아래항목을 참고해
-title항목은 책 제목, creator항목은 작가, alternative항목은 부제목(원제목) location항목은 도서관 섹션, issued항목은 발행, content항목은 책 소개 야
+title항목은 책 제목, creator항목은 작가, alternative항목은 부제목(원제목) location항목은 도서관 섹션, issued항목은 발행, content항목은 책 소개
+여기서 title항목에서 책제목검색을 creator항목에서 작가검색을 alternative에서 부제목검색을 content에서 책소개를 검색하는거야
 {reference}
 
 다음 질문에 답하라,
-작가로 질문할때는 creator항목을 참고하여 찾아줘
+작가나 사람이름이나 작품에 대한 질문을할때는 creator항목을 보고 찾아줘
 책제목을 질문할때는 title항목을 참고하여 찾아줘
 책내용을 질문할때는 content항목을 참고하여 찾아줘
 결과를 내놓을때 location항목도 넣어줘
-여러개의 작품을 추천할때 없는정보는 빼줘
-답변양식은 항상 줄글로 써줘:
+여러개의 작품을 추천할때 없는정보는 빼줘:
 {question}
-
-주어지는 언어로 답하라: {language}
 '''
 
 # 템플릿으로부터 프롬프트 생성
@@ -92,7 +90,6 @@ chain = (
         | ret  # Chroma 리트리버로부터 데이터를 검색
         | RunnableLambda(reorder_documents),  # 문서를 재정렬
         'question': itemgetter('question'),  # 질문을 그대로 가져오기
-        'language': itemgetter('language'),  # 언어 정보를 가져오기
     }
     | prompt  # 프롬프트 템플릿에 데이터 결합
     | model  # 모델에 프롬프트 전달하여 응답 생성
@@ -102,8 +99,7 @@ chain = (
 
 def get_chain_result(query):
     response = chain.invoke({
-        'question': query,
-        'language': '한국어'
+        'question': query
     })
 
     return response
