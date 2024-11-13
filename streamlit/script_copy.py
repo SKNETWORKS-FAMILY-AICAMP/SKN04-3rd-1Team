@@ -96,5 +96,5 @@ st.markdown(
 st.text_input("메시지를 입력하세요", 
               key="user_input", 
               on_change=send_message, 
-              help='~형식으로 입력해주시면 보다 정확한 정보를 받을 수 있어요!.')
+              help='질문양식 제목이 {제목}인 책에 대해서 알려줘 {작가이름} 작가의 책을 알려줘 {분야} 책을 알려줘')
 
