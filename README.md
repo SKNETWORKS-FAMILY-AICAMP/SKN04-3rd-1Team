@@ -43,8 +43,6 @@ _Development_
 <img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=Streamlit&logoColor=white">
 <img src="https://img.shields.io/badge/langchain-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white">
 <img src="https://img.shields.io/badge/scikitlearn-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white">
-<img src="https://img.shields.io/badge/numpy-013243?style=for-the-badge&logo=numpy&logoColor=white">
-<img src="https://img.shields.io/badge/pandas-150458?style=for-the-badge&logo=pandas&logoColor=white">
 <img src="https://img.shields.io/badge/json-000000?style=for-the-badge&logo=json&logoColor=white">
 
 
@@ -57,7 +55,7 @@ _Development_
 국립중앙도서관의 Linked Open Data(LOD)에서 텍스트 기반의 일반 도서 정보 데이터셋을 이용하여 프로젝트를 진행하였습니다.
 <br>
 <br>
-<img src='./img/lod.png'>
+<a href='https://lod.nl.go.kr/home/dataset/datadownload.do'><img src='./img/lod.png'></a>
 <br>
 <br>
 _data column_ 
@@ -97,9 +95,24 @@ seeAlso: 도서의 관련 링크
 <hr>
 
 ### 수행 결과
+<img src='./img/hallucination.png'> -> 올바르지 않은 출판사 답변 제공<br><br>
+<img src='./img/none_hallu.png'> -> 올바른 출판사 답변 제공<br><br>
+기존의 gpt에서는 도서를 질문하였을 때 그 책에 대한 정보를 정확하게 답변해 주지 않는 hallucination 문제가 자주 발생하는 모습을 보였습니다. <br> Rag 기법을 이용하여 국립중앙도서관의 도서 정보에 관여하여 그 도서에 대한 정확한 답변을 추출할 수 있도록 하였습니다.<br><br>
 
-<img src='./img/hallu1.png'><br>
-기존의 gpt에서는 국립중앙도서관의 도서를 질문하였을 때 그 책에 대한 정보를 정확하게 답변해 주지 않는 hallucination 문제가 자주 발생하는 모습을 보였습니다. <br> Rag 기법을 이용하여 국립중앙도서관의 도서 정보에 관여하여 그 도서에 대한 정확한 답변을 추출할 수 있도록 하였습니다.
+<img src='./img/creator.png'>작가에 대해 검색했을 때<br><br>
+<img src='./img/book.png'>책에 대해 검색했을 때<br><br>
+<img src='./img/category.png'>카테고리에 대해 검색했을 때<br><br>
+<img src='./img/keword.png'>키워드에 대해 검색했을 때<br><br>
+<img src='./img/none.png'>enco 도서관에 없는 책을 검색했을 때<br><br>
+
+_문제상황_ <br><br>
+대용량의 데이터를 전처리하고 vectordb에 저장하기 전, 20개의 데이터로 테스트했을 때는 검색이 잘 되는 것을 확인하였지만, 이후에 중간단계를 거치지 않고 한번에 20만개 정도의 데이터를 임베딩 후 검색 실행 시 일부 케이스들에 대해서 잘 안되는 것을 확인하였습니다.<br><br>
+
+_개선 방안_<br><br>
+데이터 개수를 점진적으로 늘려가며 문제가 생기는 데이터 범위를 미리 확인했으면 좋았을 것 같습니다.<br>
+현재는 기본 OpenAIEmbeddings(model='text-embedding-3-small') 를 사용하였으나, 이 임베딩이 본 데이터에 적합하지 않을 수 있다고 생각했습니다.
+-> 데이터에 맞는 embedding 모델로 fine-tuning 하는 방식 적용 가능<br>
+document의 형식이 metadata, page_content가 있는데 metadata 형식을 충분히 활용하지 못하였습니다.<br><br>
 
 <hr>
 
@@ -113,4 +126,4 @@ seeAlso: 도서의 관련 링크
 <br>
 이진섭 - 뀨잉
 <br>
-김태욱 - 뀨우
+김태욱 - 뀨우우....
