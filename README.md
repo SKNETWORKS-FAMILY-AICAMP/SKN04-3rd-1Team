@@ -46,7 +46,24 @@ _Development_
 <img src="https://img.shields.io/badge/json-000000?style=for-the-badge&logo=json&logoColor=white">
 
 
+<hr> 
 
+### Prerequisites
+**이 프로젝트를 실행하기 위해 필요한 패키지 등을 정의**
+
+```cmd
+pip install -r requirements.txt, langchain을 이용하기위한 .env파일 정의
+```
+
+<hr>
+
+### Usage
+**이 코드를 실행하기 위해 어떠한 코드를 어떻게 실행해야 하는지 작성**
+
+```cmd
+streamlit run script_model.py
+chrom run --path [크로마db패스]
+```
 
 <hr> 
 
