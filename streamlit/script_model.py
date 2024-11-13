@@ -1,5 +1,7 @@
+
 import streamlit as st
-import openai
+# OpenAI 대신 로컬 LLM 모델을 사용하기 위한 함수 임포트
+from rag import get_chain_result
 
 # 페이지 설정
 st.set_page_config(
@@ -7,9 +9,6 @@ st.set_page_config(
     page_icon="📑",
     layout="wide",
 )
-
-# OpenAI API 키 설정
-openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # 세션 상태 초기화
 if "messages" not in st.session_state:
@@ -21,14 +20,10 @@ def send_message():
     if user_message:
         st.session_state["messages"].append({"role": "user", "content": user_message})
 
-        # OpenAI API 호출
+        # 로컬 LLM 모델을 사용하여 응답 생성
         with st.spinner("잠시만 기다려 주세용♥"):
             try:
-                response = openai.ChatCompletion.create(
-                    model="gpt-4o-mini",
-                    messages=st.session_state["messages"],
-                )
-                assistant_message = response.choices[0].message["content"].strip()
+                assistant_message = get_chain_result(user_message)
                 st.session_state["messages"].append({"role": "assistant", "content": assistant_message})
             except Exception as e:
                 st.error(f"오류 발생!!: {e}")
@@ -54,7 +49,7 @@ def display_messages():
             </div>
             """
             st.markdown(message_html, unsafe_allow_html=True)
- 
+
 # 사이드바에 대화 기록 표시
 st.sidebar.title("📑 대화 기록")
 role = "😍"
@@ -63,16 +58,12 @@ for idx, message in enumerate(st.session_state["messages"]):
         message_preview = message["content"][:20]  # 메시지의 처음 20자만 표시
         message_id = f"message_{idx}"
         st.sidebar.markdown(f"- [{role} {message_preview}](#{message_id})")
-    
-    
-
 
 # 메인 레이아웃 구성
 st.title(" 📖 Enco Library Chatbot")
 
 # 메시지 표시
 display_messages()
-
 
 # 자동 스크롤 스크립트 추가
 scroll_script = """
@@ -91,7 +82,6 @@ window.onload = function() {
 st.components.v1.html(scroll_script)
 
 # 입력 창
-
 st.markdown(
     """
     <style>
@@ -105,5 +95,12 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.text_input("메시지를 입력하세요", key="user_input", on_change=send_message)
-
+st.text_input("메시지를 입력하세요", 
+              key="user_input", 
+              on_change=send_message,       
+              help='''
+              질문양식\n
+                제목이 {제목}인 책에 대해서 알려줘\n
+                {작가이름} 작가의 책을 알려줘\n
+                {분야} 책을 알려줘
+              ''')
