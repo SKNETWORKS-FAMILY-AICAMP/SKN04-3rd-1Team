@@ -35,7 +35,8 @@ def reorder_documents(documents):
 
 load_dotenv()
 set_llm_cache(InMemoryCache())
-client = chromadb.HttpClient(host='localhost', port=8000)
+#현재 chromadb서버 주소와 포트
+client = chromadb.HttpClient(host='192.168.0.10', port=8000)
 # collection = client.get_collection('books')
 chroma_db = Chroma(collection_name='books', client=client, embedding_function=OpenAIEmbeddings(model='text-embedding-3-small', show_progress_bar=True))
 ret =  chroma_db.as_retriever(
